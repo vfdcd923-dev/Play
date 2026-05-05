@@ -1,0 +1,169 @@
+05.05 13:01
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D粒子系统 - 手势控制</title>
+    <style>
+        :root {
+            --bg: #0a0a0f;
+            --panel-bg: rgba(16, 16, 28, 0.85);
+            --text: #e0e0e0;
+            --accent: #ff5e78;
+            --accent2: #5eb8ff;
+            --btn-bg: rgba(255, 255, 255, 0.06);
+            --btn-hover: rgba(255, 255, 255, 0.14);
+            --btn-active: rgba(255, 94, 120, 0.3);
+            --border: rgba(255, 255, 255, 0.1);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            --radius: 16px;
+            --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background: var(--bg);
+            font-family: 'Inter', 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            cursor: default;
+        }
+        #canvas-container {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+        }
+        canvas {
+            display: block;
+        }
+        /* 摄像头预览 */
+        #camera-preview {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 140px;
+            height: 105px;
+            border-radius: 14px;
+            overflow: hidden;
+            z-index: 10;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: var(--shadow);
+            background: #000;
+            opacity: 0.75;
+            transition: opacity var(--transition), transform var(--transition);
+            transform-origin: bottom right;
+        }
+        #camera-preview:hover {
+            opacity: 1;
+            transform: scale(1.05);
+        }
+        #camera-preview video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scaleX(-1);
+        }
+        #camera-preview .label {
+            position: absolute;
+            bottom: 6px;
+            left: 8px;
+            font-size: 10px;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.55);
+            padding: 2px 7px;
+            border-radius: 8px;
+            letter-spacing: 0.5px;
+            pointer-events: none;
+        }
+        #camera-preview .dot {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #00ff88;
+            box-shadow: 0 0 8px #00ff88;
+            animation: pulse-dot 2s infinite;
+            pointer-events: none;
+        }
+        @keyframes pulse-dot {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.3;
+            }
+        }
+        /* 顶部控制面板 */
+        #control-panel {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 20;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            background: var(--panel-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            padding: 8px 16px;
+            box-shadow: var(--shadow);
+            transition: all var(--transition);
+        }
+        /* 模型按钮组 */
+        .model-group {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .model-btn {
+            padding: 9px 16px;
+            border-radius: 24px;
+            border: 1px solid var(--border);
+            background: var(--btn-bg);
+            color: var(--text);
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            transition: all var(--transition);
+            white-space: nowrap;
+            outline: none;
+            font-family: inherit;
+        }
+        .model-btn:hover {
+            background: var(--btn-hover);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+        .model-btn.active {
+            background: var(--btn-active);
+            border-color: var(--accent);
+            color: #fff;
+            box-shadow: 0 0 18px rgba(255, 94, 120, 0.35);
+            font-weight: 600;
+        }
+        /* 颜色选择器 */
+        .color-picker-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        #colo
+
